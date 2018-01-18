@@ -7,7 +7,6 @@ public class Date
         String month = "January";
         int year = 2018;
 
-
         System.out.println("American format:");
 
         System.out.print(day);
