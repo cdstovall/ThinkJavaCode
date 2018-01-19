@@ -16,7 +16,7 @@ public class ConvertTemp
 
         // convert and output the result
         degF = DEGC_TO_DEGF;
-        System.out.printf("%.1f degrees Celsius = %.1f degrees Fahrrenheit.\n",
+        System.out.printf("%.1f degrees Celsius = %.1f degrees Fahrenheit.\n",
                 degC, degF);
     }
 }
