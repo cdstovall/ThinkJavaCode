@@ -1,12 +1,88 @@
+import java.util.Scanner;
+
 public class LogicMethods
 {
     public static void main(String[] args)
     {
-        checkFermat(3, 4, 5, 3);
-        checkFermat(3, 4, 5, 2);
+        Scanner in = new Scanner(System.in);
+
+        System.out.println("What size cheese would you like? ");
+        int diameter = in.nextInt();
+        System.out.println();
+
+        if (diameter < 0 || diameter > 3)
+        {
+            System.err.println("Your order is too crazy! Please try again.");
+            return;
+        }
+
+        System.out.println("How many yards of cheese would you like? ");
+        int yards = in.nextInt();
+        System.out.println();
+
+        if (yards < 0 || yards > 1000000)
+        {
+            System.err.println("Your order is too crazy! Please try again.");
+            return;
+        }
+
+        crazyCheesePrice(diameter,yards);
     }
 
-    //5-4
+    private static void crazyCheesePrice(int diameter, int yards)
+    {
+        int costPerYard = 0;
+
+        final int PRICE_ONE_INCH = 2;
+        final int PRICE_TWO_INCH = 4;
+        final int PRICE_THREE_INCH = 6;
+
+        if (diameter == 1)
+        {
+            costPerYard = (PRICE_ONE_INCH * yards);
+        } else if (diameter == 2)
+        {
+            costPerYard = (PRICE_TWO_INCH * yards);
+        } else if (diameter == 3)
+        {
+            costPerYard = (PRICE_THREE_INCH * yards);
+        }
+
+
+        int shipping = 0;
+
+        final int SHIPPING_ONE_OR_TWO = 2;
+        final int SHIPPING_THREE = 4;
+
+        final int FREE_SHIPPING_ONE_INCH = 50;
+        final int FREE_SHIPPING_TWO_INCHES = 75;
+        final int FREE_SHIPPING_THREE_INCHES = 25;
+
+
+        if ((diameter == 1 && yards <= FREE_SHIPPING_ONE_INCH) || (diameter == 2 && yards <= FREE_SHIPPING_TWO_INCHES))
+
+        {
+            shipping = SHIPPING_ONE_OR_TWO * yards;
+
+        } else if (diameter == 3 && yards <= FREE_SHIPPING_THREE_INCHES)
+        {
+            shipping = SHIPPING_THREE * yards;
+        }
+
+
+        final int HANDLING = 5;
+        int totalPrice = costPerYard + shipping + HANDLING;
+
+        System.out.println("The total cost for your order is $" + totalPrice);
+        System.out.println();
+
+    }
+
+
+
+
+
+    /* //5-4
     private static void checkFermat(int a, int b, int c, int n)
     {
 
@@ -27,9 +103,9 @@ public class LogicMethods
             System.out.println("Holy smokes, Fermat was right!");
             System.out.println();
         }
-    }
+    } */
 
-    //5-A
+//5-A
     /*private static void printIsLarge(int number)
     {
         if (number > 99)
@@ -40,7 +116,7 @@ public class LogicMethods
         }
     }*/
 
-    //5-B
+//5-B
     /*private static void printIsLargeOrSmall(int number)
     {
         if (number > 99)
@@ -58,7 +134,7 @@ public class LogicMethods
         }
     }*/
 
-    //5-C
+//5-C
     /*private static void printLargest(int number1, int number2)
     {
 
@@ -84,7 +160,7 @@ public class LogicMethods
         }
     } */
 
-    //5-D
+//5-D
     /* private static void printLargestOdd(int number1, int number2)
     {
         int remainder1 = (number1 % 2);
