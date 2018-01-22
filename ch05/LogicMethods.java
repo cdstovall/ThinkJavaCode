@@ -2,12 +2,31 @@ public class LogicMethods
 {
     public static void main(String[] args)
     {
-        printLargestOdd(5,7);
-        printLargestOdd(7,5);
-        printLargestOdd(5,8);
-        printLargestOdd(8,5);
-        printLargestOdd(8,8);
-        printLargestOdd(5,5);
+        checkFermat(3, 4, 5, 3);
+        checkFermat(3, 4, 5, 2);
+    }
+
+    //5-4
+    private static void checkFermat(int a, int b, int c, int n)
+    {
+
+        if (n > 2)
+        {
+            if (Math.pow(a, n) + Math.pow(b, n) == Math.pow(c, n))
+            {
+                System.out.println("Holy smokes, Fermat was wrong!");
+                System.out.println();
+            } else
+            {
+
+                System.out.println("No, that doesn't work.");
+                System.out.println();
+            }
+        } else
+        {
+            System.out.println("Holy smokes, Fermat was right!");
+            System.out.println();
+        }
     }
 
     //5-A
@@ -65,7 +84,8 @@ public class LogicMethods
         }
     } */
 
-    private static void printLargestOdd(int number1, int number2)
+    //5-D
+    /* private static void printLargestOdd(int number1, int number2)
     {
         int remainder1 = (number1 % 2);
         int remainder2 = (number2 % 2);
@@ -110,6 +130,6 @@ public class LogicMethods
             System.out.println("Neither number is odd");
             System.out.println();
         }
-    }
+    } */
 
 }
