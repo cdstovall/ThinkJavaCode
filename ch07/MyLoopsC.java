@@ -17,6 +17,7 @@ public class MyLoopsC
         }
     }
 
+
     private static void exercise7cWhile()
     {
         int x = 100;
