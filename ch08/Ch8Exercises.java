@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Ch8Exercises
 {
     public static void main (String [] args)
@@ -6,12 +8,11 @@ public class Ch8Exercises
         printArray(testArray);
     }
 
+
     //Exercise 8-A
     private static void printArray(int[] y)
     {
-        for (int x : y)
-        {
-            System.out.println(x);
-        }
+        System.out.println(Arrays.toString(y));
+
     }
 }
