@@ -11,7 +11,7 @@ public class Exercise8A
 
     private static void printArray(int[] y)
     {
-        System.out.println(Arrays.toString(y));
+        System.out.println("The values in this array are: " + Arrays.toString(y));
 
     }
 }
