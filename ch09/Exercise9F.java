@@ -7,8 +7,14 @@ public class Exercise9F
 
     private static void printPhoneNumber (String digits)
     {
-        System.out.println("Area Code: " + digits.substring(0,3));
-        System.out.println("Exchange: " + digits.substring(4,7));
-        System.out.println("Line Number: " + digits.substring(8,12));
+        //Expected format: ###-###-####
+
+        String areaCode = digits.substring(0,3);
+        String exchange = digits.substring(4,7);
+        String lineNumber = digits.substring(8,12);
+
+        System.out.println("Area Code: " + areaCode);
+        System.out.println("Exchange: " + exchange);
+        System.out.println("Line Number: " + lineNumber);
     }
 }
