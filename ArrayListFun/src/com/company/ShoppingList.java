@@ -5,8 +5,6 @@ import java.util.Scanner;
 
 public class ShoppingList
 {
-    private int total = 0;
-
     private Scanner scanner = new Scanner(System.in);
 
 
