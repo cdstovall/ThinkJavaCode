@@ -2,15 +2,13 @@ package com.company;
 
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class PetHotel
 {
     TreeMap<Integer, String> hotelRooms;
     private Scanner scanner;
-
-    private String petName;
-    private int roomNumber;
 
     public PetHotel()
     {
@@ -30,6 +28,9 @@ public class PetHotel
         String command;
         String[] words;
 
+        String petName;
+        int roomNumber;
+
         do
         {
             int fromRoomNumber;
@@ -39,6 +40,16 @@ public class PetHotel
             {
                 System.out.println("There aren't any pets here right now.");
             }
+
+            /* Valid commands:
+            Checkin <petname> <roomNumber>;
+            Checkout <petname> <roomNumber>;
+            Move <petname> <fromRoomNumber> <toRoomNumber>;
+            Swap <roomNumber> <roomNumber>;
+            MoveOver (moves all pets to roomNumber + 1, 109 goes to 100)
+            Occupancy (list occupants);
+            CloseForSeason (clear map);
+            Exit (ends program) */
 
             System.out.print("Enter command: ");
             String inputLine = scanner.nextLine();
@@ -50,90 +61,26 @@ public class PetHotel
                 petName = words[1];
                 roomNumber = Integer.parseInt(words[2]);
 
-                boolean roomExists = (roomNumber >= 100 && roomNumber <= 109);
-
-                if (!roomExists)
-                {
-                    System.out.println("Sorry, we only have rooms 100 - 109. Please select a room that exists.");
-                }
-                else if (hotelRooms.get(roomNumber) != null)
-                {
-                    System.out.println("Sorry, this room already has an occupant. Please select a different one.");
-                }
-                else if (hotelRooms.get(roomNumber) == null)
-                {
-                    checkIn(petName, roomNumber);
-                }
+                checkIn(petName, roomNumber);
             }
             else if (command.equalsIgnoreCase("CheckOut"))
             {
-                String petName = words[1];
+                petName = words[1];
                 roomNumber = Integer.parseInt(words[2]);
 
-                if (hotelRooms.get(roomNumber) == null)
-                {
-                    System.out.println("Your pet is not in room number " + roomNumber + ".");
-                }
-                else
-                {
-                    boolean roomExists = (roomNumber >= 100 && roomNumber <= 109);
-                    boolean isRightPet = hotelRooms.get(roomNumber).equalsIgnoreCase(petName);
-
-                    if (!roomExists)
-                    {
-                        System.out.println("Sorry, we only have rooms 100 - 109. Please select a room that exists.");
-                    }
-                    else if (hotelRooms.get(roomNumber) == null)
-                    {
-                        System.out.println("Sorry, this room is empty.");
-                    }
-                    else if (!isRightPet)
-                    {
-                        System.out.println("This is not the pet you're looking for.");
-                    }
-                    else if (hotelRooms.get(roomNumber) != null)
-                    {
-                        checkOut(petName, roomNumber);
-                    }
-                }
+                checkOut(petName, roomNumber);
             }
             else if (command.equalsIgnoreCase("Move"))
             {
-                String petName = words[1];
+                petName = words[1];
                 fromRoomNumber = Integer.parseInt(words[2]);
                 toRoomNumber = Integer.parseInt(words[3]);
 
-                if (hotelRooms.get(fromRoomNumber) == null)
-                {
-                    System.out.println("Your pet is not in room number " + fromRoomNumber + ".");
-                }
-                else
-                {
-                    boolean toRoomExists = (toRoomNumber >= 100 && toRoomNumber <= 109);
-                    boolean fromRoomExists = (fromRoomNumber >= 100 && fromRoomNumber <=109);
-                    boolean isRightPet = hotelRooms.get(fromRoomNumber).equalsIgnoreCase(petName);
-
-                    if (!fromRoomExists)
-                    {
-                        System.out.println("Sorry, we only have rooms 100 - 109. " + petName + " is currently in a room that exists. Please try again." );
-                    }
-                    else if (!toRoomExists)
-                    {
-                        System.out.println("Sorry, we only have rooms 100 - 109. We cannot move " + petName + " to a room that does not exist.");
-                    }
-                    else if (hotelRooms.get(toRoomNumber) != null)
-                    {
-                        System.out.println("Sorry, room number " + toRoomNumber + " already has an occupant. Please select a different one.");
-                    }
-                    else if (!isRightPet)
-                    {
-                        System.out.println("This is not the pet you're looking for.");
-                    }
-                    else
-                    {
-                        move(petName,fromRoomNumber,toRoomNumber);
-                    }
-                }
+                move(petName, fromRoomNumber, toRoomNumber);
+            }
+            else if (command.equalsIgnoreCase("MoveOver"))
+            {
+                moveOver();
             }
             else if (command.equalsIgnoreCase("Occupancy"))
             {
@@ -142,12 +89,17 @@ public class PetHotel
             else if (command.equalsIgnoreCase("CloseForSeason"))
             {
                 closeForSeason();
+            }
+            else if (command.equalsIgnoreCase("Swap"))
+            {
+                int firstRoomNumber = Integer.parseInt(words[1]);
+                int secondRoomNumber = Integer.parseInt(words[2]);
 
+                swap(firstRoomNumber, secondRoomNumber);
             }
             else if (command.equalsIgnoreCase("Exit"))
             {
                 System.out.println("You have ended the program!");
-
             }
             else
             {
@@ -157,34 +109,174 @@ public class PetHotel
 
     }
 
+    private boolean roomNotReal(int roomNumber)
+    {
+        return !(roomNumber >= 100 && roomNumber <= 109);
+    }
+
+    private boolean roomTaken(int roomNumber)
+    {
+        return !(hotelRooms.get(roomNumber) == null);
+    }
+
+    private boolean wrongPet(String petName, int roomNumber)
+    {
+        return !(hotelRooms.get(roomNumber).equalsIgnoreCase(petName));
+    }
+
     private void checkIn(String petName, int roomNumber)
     {
-        hotelRooms.put(roomNumber, petName);
-        System.out.println("" + petName + " checked into room " + roomNumber + ".");
-
-        System.out.println(hotelRooms);
+        if (roomNotReal(roomNumber))
+        {
+            System.out.println("Sorry, we only have rooms 100 - 109. Please select a room that exists.");
+        }
+        else if (roomTaken(roomNumber))
+        {
+            System.out.println("Sorry, this room already has an occupant. Please select a different one.");
+        }
+        else
+        {
+            hotelRooms.put(roomNumber, petName);
+            System.out.println("" + petName + " checked into room " + roomNumber + ".");
+        }
     }
 
     private void checkOut(String petName, int roomNumber)
     {
-        hotelRooms.remove(roomNumber, petName);
-        System.out.println("" + petName + " has been checked out of room number " + roomNumber + ".");
-
-        System.out.println(hotelRooms);
+        if (roomNotReal(roomNumber))
+        {
+            System.out.println("Sorry, we only have rooms 100 - 109. Please select a room that exists.");
+        }
+        else if (!roomTaken(roomNumber))
+        {
+            System.out.println("Your pet is not in room number " + roomNumber + ".");
+        }
+        else
+        {
+            if (wrongPet(petName, roomNumber))
+            {
+                System.out.println("This is not the pet you're looking for.");
+            }
+            else if (roomTaken(roomNumber))
+            {
+                hotelRooms.remove(roomNumber, petName);
+                System.out.println("" + petName + " has been checked out of room number " + roomNumber + ".");
+            }
+        }
     }
 
-    private void move(String petname, int fromRoomNumber, int toRoomNumber)
+    private void move(String petName, int fromRoomNumber, int toRoomNumber)
     {
-        hotelRooms.remove(fromRoomNumber);
-        hotelRooms.put(toRoomNumber, petname);
-        System.out.println("" + petname + " has been moved from room number " + fromRoomNumber + " to room number " + toRoomNumber + ".");
+        if (roomNotReal(fromRoomNumber))
+        {
+            System.out.println("Sorry, we only have rooms 100 - 109. " + petName + " is currently in a room that exists. Please try again.");
+        }
+        else if (roomNotReal(toRoomNumber))
+        {
+            System.out.println("Sorry, we only have rooms 100 - 109. We cannot move " + petName + " to a room that does not exist.");
+        }
+        else if (!roomTaken(fromRoomNumber))
+        {
+            System.out.println("Your pet is not in room number " + fromRoomNumber + ".");
+        }
+        else
+        {
+            if (roomTaken(toRoomNumber))
+            {
+                System.out.println("Sorry, room number " + toRoomNumber + " already has an occupant. Please select a different one.");
+            }
+            else if (wrongPet(petName, fromRoomNumber))
+            {
+                System.out.println("This is not the pet you're looking for.");
+            }
+            else
+            {
+                hotelRooms.remove(fromRoomNumber);
+                hotelRooms.put(toRoomNumber, petName);
+                System.out.println("" + petName + " has been moved from room number " + fromRoomNumber + " to room number " + toRoomNumber + ".");
+            }
+        }
+    }
 
-        System.out.println(hotelRooms);
+    private void swap(int firstRoomNumber, int secondRoomNumber)
+    {
+        if (roomNotReal(firstRoomNumber))
+        {
+            System.out.println("Sorry, we only have rooms 100 - 109. The pet you are looking for is currently in a room that exists. Please try again.");
+        }
+        else if (roomNotReal(secondRoomNumber))
+        {
+            System.out.println("Sorry, we only have rooms 100 - 109. We cannot move the pet you are looking for to a room that does not exist.");
+        }
+        else if (!roomTaken(firstRoomNumber))
+        {
+            System.out.println("The pet you are looking for is not in room number " + firstRoomNumber + ".");
+        }
+        else
+        {
+            if (!roomTaken(secondRoomNumber))
+            {
+                System.out.println("Sorry, there aren't any pets in this room to swap with!");
+            }
+            else
+            {
+                String petInFirstRoom = hotelRooms.get(firstRoomNumber);
+                String petInSecondRoom = hotelRooms.get(secondRoomNumber);
+
+                hotelRooms.put(secondRoomNumber, petInFirstRoom);
+                hotelRooms.put(firstRoomNumber, petInSecondRoom);
+                System.out.println("" + petInFirstRoom + " has been moved to room number " + secondRoomNumber +
+                        ", and " + petInSecondRoom + " has been moved to room number " + firstRoomNumber + ".");
+            }
+        }
+    }
+
+    private void moveOver()
+    {
+        String firstPet = null;
+
+        if (hotelRooms.get(109) != null)
+        {
+            firstPet = hotelRooms.get(109);
+            hotelRooms.remove(109);
+        }
+
+        for (int i = 108; i >= 100; i--)
+        {
+            String currentPet = null;
+
+            if (hotelRooms.get(i) != null)
+            {
+                currentPet = hotelRooms.get(i);
+            }
+
+            if (currentPet != null)
+            {
+                hotelRooms.put(i + 1, currentPet);
+                hotelRooms.remove(i);
+            }
+        }
+
+        if (firstPet != null)
+        {
+            hotelRooms.put(100, firstPet);
+        }
     }
 
     private void getOccupancy()
     {
-        hotelRooms.forEach((roomNumber,petName) -> System.out.println("" + petName + " is in room number " + roomNumber + "."));
+        Set<Map.Entry<Integer, String>> entries = hotelRooms.entrySet();
+
+        for (Map.Entry<Integer, String> entry : entries)
+        {
+            int roomNumber = entry.getKey();
+            String petName = entry.getValue();
+
+            System.out.println("" + petName + " is in room number " + roomNumber + ".");
+        }
+
+        //Lambda version:
+        // hotelRooms.forEach((roomNumber,petName) -> System.out.println("" + petName + " is in room number " + roomNumber + "."));
     }
 
     private void closeForSeason()
@@ -192,5 +284,4 @@ public class PetHotel
         hotelRooms.clear();
         System.out.println("We are closed for the rest of the season. Thank you for your patronage!");
     }
-
 }
